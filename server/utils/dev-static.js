@@ -27,7 +27,7 @@ serverCompiler.watch({}, (err, stats) => {
   if (err) throw err;
   stats = stats.toJson();
   stats.errors.forEach(err => {
-    console.err(err);
+    console.error(err);
   })
   stats.warnings.forEach(warn => {
     console.warn(warn);

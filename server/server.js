@@ -1,4 +1,6 @@
 const express = require('express');
+// 专用于处理浏览器标签页图标的小工具 favicon.ico
+const favicon = require('serve-favicon');
 const ReactSSR = require('react-dom/server');
 const fs = require('fs');
 const path = require('path');
@@ -6,6 +8,8 @@ const path = require('path');
 const isDev = process.env.NODE_ENV === 'development';
 
 const app = express();
+
+app.use(favicon(path.join(__dirname, '../favicon.ico')));
 
 if (!isDev) {
   const serverEntry = require('../dist/server-entry').default;
