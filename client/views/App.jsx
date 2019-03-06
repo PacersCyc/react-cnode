@@ -12,6 +12,7 @@ export default class App extends React.Component {
       <div key="navs">
         <Link to="/">首页</Link>
         <Link to="/detail">详情页</Link>
+        <Link to="/test">测试</Link>
       </div>,
       <Routes key="routes" />,
     ]
