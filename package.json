@@ -12,7 +12,8 @@
     "dev:server": "nodemon server/server.js",
     "dev:client": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.config.client.js",
     "lint": "eslint --ext .js --ext .jsx client/",
-    "precommit": "npm run lint"
+    "precommit": "npm run lint",
+    "start": "cross-env NODE_ENV=production node server/server.js"
   },
   "author": "cyc",
   "license": "ISC",
@@ -30,6 +31,7 @@
     "react": "^16.8.3",
     "react-async-bootstrapper": "^2.1.1",
     "react-dom": "^16.8.3",
+    "react-helmet": "^5.2.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "serialize-javascript": "^1.6.1",
