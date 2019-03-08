@@ -5,16 +5,33 @@ import {
 } from 'mobx-react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import Button from '@material-ui/core/Button';
+
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+// import Button from '@material-ui/core/Button';
 import AppState from '../../store/app-state';
 
 import Container from '../layout/container';
+import TopicListItem from './list-item';
+
+const topic = {
+  title: 'this is title',
+  username: 'cyc',
+  reply_count: 10,
+  visit_count: 100,
+  create_at: '2019-03-20',
+  tab: 'share',
+};
 
 @inject('appState') @observer
 class TopicList extends React.Component {
   constructor() {
     super();
-    this.changeName = this.changeName.bind(this);
+    this.state = {
+      tabIndex: 0,
+    };
+    this.changeTab = this.changeTab.bind(this);
+    this.listItemClick = this.listItemClick.bind(this);
   }
 
   componentDidMount() {
@@ -30,29 +47,44 @@ class TopicList extends React.Component {
     })
   }
 
-  changeName(e) {
-    this.props.appState.changeName(e.target.value); // eslint-disable-line
+  changeTab(e, index) {
+    this.setState({
+      tabIndex: index,
+    })
   }
 
+  /* eslint-disable */
+  listItemClick() {
+
+  }
+  /* eslint-enable */
+
   render() {
-    const { appState } = this.props;
-    const { msg } = appState;
+    const {
+      tabIndex,
+    } = this.state;
     return (
       <Container>
         <Helmet>
           <title>this is topic list</title>
           <meta name="description" content="this is description" />
         </Helmet>
-        <Button raised color="primary">touch</Button>
-        <input type="text" onChange={this.changeName} />
-        <span>{msg}</span>
+        <Tabs value={tabIndex} onChange={this.changeTab}>
+          <Tab label="全部" />
+          <Tab label="分享" />
+          <Tab label="工作" />
+          <Tab label="问答" />
+          <Tab label="精品" />
+          <Tab label="测试" />
+        </Tabs>
+        <TopicListItem onClick={this.listItemClick} topic={topic} />
       </Container>
     )
   }
 }
 
-export default TopicList;
-
 TopicList.propTypes = {
   appState: PropTypes.instanceOf(AppState),
 }
+
+export default TopicList;
