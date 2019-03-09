@@ -16,7 +16,7 @@ export default class App extends React.Component {
       //   <Link to="/detail">详情页</Link>
       //   <Link to="/test">测试</Link>
       // </div>,
-      <AppBar />,
+      <AppBar key="appbar" />,
       <Routes key="routes" />,
     ]
   }
