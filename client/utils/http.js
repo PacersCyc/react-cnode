@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const baseUrl = process.env.API_BASE || '';
 
-const parseUrl = (url, params) => {
+const parseUrl = (url, params = {}) => {
   const str = Object.keys(params).reduce((result, key) => {
     const res = `${result}${key}=${params[key]}&`;
     return res;
@@ -33,14 +33,14 @@ export const get = (url, params) => new Promise((resolve, reject) => {
   // })
 })
 
-export const post = (url, params, data) => new Promise((resolve, reject) => {
-  axios.post(parseUrl(url, params), data)
+export const post = (url, params, postData) => new Promise((resolve, reject) => {
+  axios.post(parseUrl(url, params), postData)
     .then((resp) => {
-      const { resData } = resp;
-      if (resData && resData.success === true) {
-        resolve(resData);
+      const { data } = resp;
+      if (data && data.success === true) {
+        resolve(data);
       } else {
-        reject(resData);
+        reject(data);
       }
     })
     .catch(reject)

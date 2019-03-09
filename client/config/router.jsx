@@ -6,6 +6,8 @@ import {
 
 import TopicList from '../views/topic-list/index';
 import TopicDetail from '../views/topic-detail/index';
+import UserLogin from '../views/user/login';
+import UserInfo from '../views/user/info';
 import TestApi from '../views/test/api-test';
 
 export default () => [
@@ -13,5 +15,7 @@ export default () => [
   <Route path="/index" component={TopicList} exact key="index" />,
   <Route path="/list" component={TopicList} key="list" />,
   <Route path="/detail/:id" component={TopicDetail} key="detail" />,
+  <Route path="/user/login" component={UserLogin} key="login" />,
+  <Route path="/user/info" component={UserInfo} key="info" />,
   <Route path="/test" component={TestApi} key="test" />,
 ]
