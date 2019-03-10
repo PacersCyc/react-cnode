@@ -80,8 +80,11 @@ class TopicList extends React.Component {
   render() {
     const {
       topicStore,
+      appState,
     } = this.props;
+    const { user } = appState;
     const topicList = topicStore.topics;
+    const { createdTopics } = topicStore;
     const syncingTopics = topicStore.syncing;
 
     return (
@@ -97,6 +100,22 @@ class TopicList extends React.Component {
             ))
           }
         </Tabs>
+        <List style={{ backgroundColor: '#dfdfdf' }}>
+          {
+            createdTopics.map((topic) => {
+              topic = Object.assign({}, topic, {
+                author: user.info,
+              });
+              return (
+                <TopicListItem
+                  onClick={() => { this.listItemClick(topic) }}
+                  topic={topic}
+                  key={topic.id}
+                />
+              )
+            })
+          }
+        </List>
         <List>
           {
             topicList.map(topic => (

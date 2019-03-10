@@ -5,10 +5,12 @@ import {
   action,
   extendObservable,
 } from 'mobx';
-import { topicSchema } from '../utils/variable-define';
-import { get } from '../utils/http';
+import { topicSchema, replySchema } from '../utils/variable-define';
+import { get, post } from '../utils/http';
 
 const createTopic = topic => Object.assign({}, topicSchema, topic);
+
+const createReply = reply => Object.assign({}, replySchema, reply);
 
 class Topic {
   constructor(data) {
@@ -16,12 +18,37 @@ class Topic {
   }
 
   @observable syncing = false;
+
+  @observable createdReplies = [];
+
+  @action doReply(content) {
+    return new Promise((resolve, reject) => {
+      post(`topic/${this.id}/replies`, {
+        needAccessToken: true,
+      }, {
+        content,
+      }).then((resp) => {
+        if (resp.success) {
+          this.createdReplies.push(createReply({
+            id: resp.reply_id,
+            content,
+            create_at: Date.now(),
+          }))
+          resolve()
+        } else {
+          reject(resp)
+        }
+      }).catch(reject)
+    })
+  }
 }
 
 export default class TopicStore {
   @observable topics;
 
   @observable details;
+
+  @observable createdTopics = [];
 
   @observable syncing;
 
@@ -83,6 +110,32 @@ export default class TopicStore {
           }
         }).catch(reject)
       }
+    })
+  }
+
+  @action createTopic(title, tab, content) {
+    return new Promise((resolve, reject) => {
+      post('topics', {
+        needAccessToken: true,
+      }, {
+        title,
+        tab,
+        content,
+      }).then((resp) => {
+        if (resp.success) {
+          const topic = {
+            title,
+            tab,
+            content,
+            id: resp.topic_id,
+            create_at: Date.now(),
+          };
+          this.createdTopics.push(new Topic(createTopic(topic)));
+          resolve()
+        } else {
+          reject()
+        }
+      }).catch(reject)
     })
   }
 }

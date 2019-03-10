@@ -38,6 +38,7 @@ module.exports = function(req, res, next) {
       res.status(resp.status).send(resp.data);
     }
   }).catch(err => {
+    console.log(err);
     if (err.response) {
       res.status(500).send(err.response.data);
     } else {

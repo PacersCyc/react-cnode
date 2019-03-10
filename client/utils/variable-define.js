@@ -29,5 +29,13 @@ export const topicSchema = {
 
 export const replySchema = {
   id: '',
-  author: {},
+  author: {
+    loginname: '',
+    avatar_url: '',
+  },
+  content: '',
+  ups: [],
+  create_at: '',
+  reply_id: null,
+  is_uped: false,
 }
