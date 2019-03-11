@@ -58,12 +58,17 @@ class TopicList extends React.Component {
   }
 
   bootstrap() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        this.props.appState.count = 3;
-        resolve(true);
-      });
-    })
+    // return new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     this.props.appState.count = 3;
+    //     resolve(true);
+    //   });
+    // })
+    const query = queryString.parse(this.props.location.search);
+    const { tab } = query;
+    return this.props.topicStore.fetchTopics(tab || 'all')
+      .then(() => true)
+      .catch(() => false)
   }
 
   changeTab(e, value) {
@@ -100,22 +105,29 @@ class TopicList extends React.Component {
             ))
           }
         </Tabs>
-        <List style={{ backgroundColor: '#dfdfdf' }}>
-          {
-            createdTopics.map((topic) => {
-              topic = Object.assign({}, topic, {
-                author: user.info,
-              });
-              return (
-                <TopicListItem
-                  onClick={() => { this.listItemClick(topic) }}
-                  topic={topic}
-                  key={topic.id}
-                />
-              )
-            })
-          }
-        </List>
+        {
+          createdTopics.length > 0
+            ? (
+              <List style={{ backgroundColor: '#dfdfdf' }}>
+                {
+                  createdTopics.map((topic) => {
+                    topic = Object.assign({}, topic, {
+                      author: user.info,
+                    });
+                    return (
+                      <TopicListItem
+                        onClick={() => { this.listItemClick(topic) }}
+                        topic={topic}
+                        key={topic.id}
+                      />
+                    )
+                  })
+                }
+              </List>
+            )
+            : null
+        }
+
         <List>
           {
             topicList.map(topic => (

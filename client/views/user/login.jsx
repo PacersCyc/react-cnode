@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import {
   inject,
   observer,
-} from 'mobx-react'
+} from 'mobx-react';
+import {
+  Redirect,
+} from 'react-router-dom';
+import queryString from 'query-string';
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -28,10 +32,16 @@ class UserLogin extends React.Component {
     this.handleLogin = this.handleLogin.bind(this);
   }
 
-  componentWillMount() {
-    if (this.props.user.isLogin) {
-      this.context.router.history.replace('/user/info');
-    }
+  // componentWillMount() {
+  //   if (this.props.user.isLogin) {
+  //     this.context.router.history.replace('/user/info');
+  //   }
+  // }
+
+  getFrom(location) {
+    location = location || this.props.location;
+    const query = queryString.parse(location.search);
+    return query.from || '/user/info';
   }
 
   handleInput(e) {
@@ -51,7 +61,7 @@ class UserLogin extends React.Component {
     });
     return this.props.appState.login(this.state.accesstoken)
       .then(() => {
-        this.context.router.history.replace('/user/info');
+        // this.context.router.history.replace('/user/info');
       })
       .catch((err) => {
         console.log(err); // eslint-disable-line
@@ -59,8 +69,14 @@ class UserLogin extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, user } = this.props;
+    const { isLogin } = user;
+    const from = this.getFrom();
     const { helpText, accesstoken } = this.state;
+
+    if (isLogin) {
+      return <Redirect to={from} />
+    }
     return (
       <UserWrapper>
         <div className={classes.root}>
@@ -82,6 +98,7 @@ class UserLogin extends React.Component {
 
 UserLogin.propTypes = {
   classes: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 }
 
 UserLogin.wrappedComponent.propTypes = {

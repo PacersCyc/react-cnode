@@ -1,5 +1,6 @@
 import {
   observable,
+  toJS,
   // computed,
   action,
 } from 'mobx';
@@ -19,6 +20,12 @@ export default class AppState {
       list: [],
       syncing: false,
     },
+  }
+
+  init({ user }) {
+    if (user) {
+      this.user = user;
+    }
   }
 
   @action login(accessToken) {
@@ -74,5 +81,11 @@ export default class AppState {
         this.user.collections.syncing = true;
       })
     })
+  }
+
+  toJson() {
+    return {
+      user: toJS(this.user),
+    }
   }
 }

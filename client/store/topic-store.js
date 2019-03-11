@@ -1,6 +1,6 @@
 import {
   observable,
-  // toJS,
+  toJS,
   computed,
   action,
   extendObservable,
@@ -50,12 +50,17 @@ export default class TopicStore {
 
   @observable createdTopics = [];
 
+  @observable tab;
+
   @observable syncing;
 
-  constructor({ syncing, topics, details } = { syncing: false, topics: [], details: [] }) {
+  constructor({
+    syncing = false, topics = [], details = [], tab = null,
+  } = {}) {
     this.syncing = syncing;
     this.topics = topics.map(topic => new Topic(createTopic(topic)));
     this.details = details.map(topic => new Topic(createTopic(topic)));
+    this.tab = tab;
   }
 
   addTopic(topic) {
@@ -71,25 +76,28 @@ export default class TopicStore {
 
   @action fetchTopics(tab) {
     return new Promise((resolve, reject) => {
-      this.syncing = true;
-      this.topics = [];
-      get('topics', {
-        mdrender: false,
-        tab,
-      }).then((resp) => {
-        if (resp.success) {
-          resp.data.forEach((topic) => {
-            this.addTopic(topic);
-          })
-          resolve();
-        } else {
-          reject();
-        }
-        this.syncing = false;
-      }).catch((err) => {
-        reject(err);
-        this.syncing = false;
-      })
+      if (tab === this.tab && this.topics.length > 0) {
+        resolve()
+      } else {
+        this.tab = tab;
+        this.syncing = true;
+        this.topics = [];
+        get('topics', {
+          mdrender: false,
+          tab,
+        }).then((resp) => {
+          if (resp.success) {
+            this.topics = resp.data.map(topic => new Topic(createTopic(topic)));
+            resolve();
+          } else {
+            reject();
+          }
+          this.syncing = false;
+        }).catch((err) => {
+          reject(err);
+          this.syncing = false;
+        })
+      }
     })
   }
 
@@ -137,5 +145,14 @@ export default class TopicStore {
         }
       }).catch(reject)
     })
+  }
+
+  toJson() {
+    return {
+      topics: toJS(this.topics),
+      syncing: this.syncing,
+      details: toJS(this.details),
+      tab: this.tab,
+    }
   }
 }
