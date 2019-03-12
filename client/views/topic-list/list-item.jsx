@@ -4,7 +4,7 @@ import dateFormat from 'dateformat';
 import cx from 'classnames';
 
 import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+// import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import { withStyles } from '@material-ui/core/styles';
@@ -56,9 +56,7 @@ Secondary.propTypes = {
 
 const TopicListItem = ({ onClick, topic }) => (
   <ListItem button onClick={onClick}>
-    <ListItemAvatar>
-      <Avatar src={topic.author.avatar_url} />
-    </ListItemAvatar>
+    <Avatar src={topic.author.avatar_url} />
     <ListItemText
       primary={<StyledPrimary topic={topic} />}
       secondary={<StyledSecondary topic={topic} />}

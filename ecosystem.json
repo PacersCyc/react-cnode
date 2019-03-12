@@ -1,0 +1,22 @@
+{
+  "apps": [
+    {
+      "name": "cnode",
+      "script": "./server/server.js",
+      "env_production": {
+        "NODE_ENV": "production",
+        "HOST": "localhost"
+      }
+    }
+  ],
+  "deploy": {
+    "production": {
+      "user": "root",
+      "host": "",
+      "repo": "",
+      "ref": "origin/master",
+      "path": "",
+      "post-deploy": "npm install && npm run deploy && pm2 startOrRestart ecosystem.json --env production"
+    }
+  }
+}
